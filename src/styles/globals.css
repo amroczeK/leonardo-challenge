@@ -134,6 +134,7 @@ dl {
 }
 
 dt {
+  @apply text-muted-foreground font-medium;
   grid-column-start: 1;
 }
 
