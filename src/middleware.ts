@@ -36,12 +36,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(profileUrl);
   }
 
-  // If user has profile and trying to access public pages, redirect to home page
-  if (hasUserProfile && isPublicRoute) {
-    const homeUrl = new URL("/", request.url);
-    return NextResponse.redirect(homeUrl);
-  }
-
   return NextResponse.next();
 }
 

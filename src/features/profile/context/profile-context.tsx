@@ -63,7 +63,7 @@ export function UserProfileProvider({ children }: { children: ReactNode }) {
 
       if (response.ok) {
         setUserProfile({ username, jobTitle });
-        router.push("/");
+        router.push("/profile");
         router.refresh();
       }
     } catch (error) {
