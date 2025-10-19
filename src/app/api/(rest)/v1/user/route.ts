@@ -10,15 +10,15 @@ export async function GET() {
   const userProfileCookie = cookieStore.get("user-profile")?.value;
 
   if (!userProfileCookie) {
-    return NextResponse.json({ error: "User info not found" }, { status: 404 });
+    return NextResponse.json({ error: "User profile not found" }, { status: 404 });
   }
 
   try {
-    const userInfo = JSON.parse(userProfileCookie);
-    return NextResponse.json(userInfo);
+    const userProfile = JSON.parse(userProfileCookie);
+    return NextResponse.json(userProfile);
   } catch {
     return NextResponse.json(
-      { error: "Failed to parse user info" },
+      { error: "Failed to parse user profile" },
       { status: 500 }
     );
   }
