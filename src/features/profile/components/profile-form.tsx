@@ -75,6 +75,10 @@ export function ProfileForm({ ...props }: React.ComponentProps<typeof Card>) {
                 type="text"
                 placeholder="Software Engineer"
                 required
+                aria-invalid={!!errors.jobTitle}
+                aria-describedby={
+                  errors.jobTitle ? "job-title-error" : undefined
+                }
               />
               <FieldError
                 errorId="job-title-error"
@@ -90,6 +94,10 @@ export function ProfileForm({ ...props }: React.ComponentProps<typeof Card>) {
                 type="text"
                 placeholder="john_doe"
                 required
+                aria-invalid={!!errors.username}
+                aria-describedby={
+                  errors.username ? "username-error" : undefined
+                }
               />
               <FieldError
                 errorId="username-error"
