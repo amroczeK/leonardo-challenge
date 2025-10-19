@@ -1,6 +1,10 @@
 # Leonardo.ai Challenge
 Welcome to my submission for the NextJS web app challenge :).
 
+Website is accessible via https://leonardo-challenge-two.vercel.app/
+
+![preview](./public/preview.png)
+
 ## Getting Started
 
 First install the dependencies:
