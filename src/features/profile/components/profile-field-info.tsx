@@ -11,7 +11,7 @@ export default function ProfileFieldInfo({
   return (
     <Field>
       <FieldLabel>{label}</FieldLabel>
-      <p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+      <p className="text-sm leading-none">
         {value}
       </p>
     </Field>
