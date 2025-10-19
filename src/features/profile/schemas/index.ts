@@ -12,7 +12,7 @@ export const ProfileSchema = z.object({
     .max(32, "Username is too long.")
     .regex(
       /^[a-zA-Z0-9_]+$/,
-      "Only letters, numbers, and underscore are allowed."
+      "No spaces and only letters, numbers, and underscore are allowed."
     ),
 });
 

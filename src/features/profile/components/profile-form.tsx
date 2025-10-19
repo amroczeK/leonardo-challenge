@@ -13,25 +13,44 @@ import { Input } from "@/components/ui/input";
 import { useUserProfile } from "../context/profile-context";
 import { ProfileSchema } from "../schemas";
 import { useState } from "react";
+import { ZodError } from "zod";
+import FieldError from "@/components/ui/field-error";
 
 export function ProfileForm({ ...props }: React.ComponentProps<typeof Card>) {
   const { createUserProfile } = useUserProfile();
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrors({});
     setIsSubmitting(true);
 
     try {
+      // Get form data
       const formData = new FormData(e.currentTarget);
       const data = {
         jobTitle: formData.get("jobTitle") as string,
         username: formData.get("username") as string,
       };
 
-      await createUserProfile(data.username, data.jobTitle);
+      // Validate with Zod schema
+      const validatedData = ProfileSchema.parse(data);
+
+      // Submit to API
+      await createUserProfile(validatedData.username, validatedData.jobTitle);
     } catch (error) {
-      console.error("Form submission error:", error);
+      if (error instanceof ZodError) {
+        // Handle Zod validation errors
+        const fieldErrors: Record<string, string> = {};
+        error.issues.forEach((issue) => {
+          const path = issue.path[0] as string;
+          fieldErrors[path] = issue.message;
+        });
+        setErrors(fieldErrors);
+      } else {
+        setErrors({ form: "An unexpected error occurred. Please try again." });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -57,6 +76,11 @@ export function ProfileForm({ ...props }: React.ComponentProps<typeof Card>) {
                 placeholder="Software Engineer"
                 required
               />
+              <FieldError
+                errorId="job-title-error"
+                isError={!!errors.jobTitle}
+                errorMessage={errors.jobTitle}
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="username">Username</FieldLabel>
@@ -67,7 +91,17 @@ export function ProfileForm({ ...props }: React.ComponentProps<typeof Card>) {
                 placeholder="john_doe"
                 required
               />
+              <FieldError
+                errorId="username-error"
+                isError={!!errors.username}
+                errorMessage={errors.username}
+              />
             </Field>
+            <FieldError
+              errorId="form-error"
+              isError={!!errors.form}
+              errorMessage={errors.form}
+            />
             <FieldGroup>
               <Field>
                 <Button type="submit" disabled={isSubmitting}>
