@@ -9,6 +9,9 @@ export default function NavigationBar() {
           <Link href="/">Home</Link>
         </li>
         <li>
+          <Link href="/login">Login</Link>
+        </li>
+        <li>
           <Link href="/signup">Signup</Link>
         </li>
       </ul>
