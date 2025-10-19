@@ -1,17 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Character } from "@/lib/graphql/types/character";
 
 interface CharacterCardProps {
   character: Character;
+  onClick?: () => void;
 }
 
-export function CharacterCard({ character }: CharacterCardProps) {
+export function CharacterCard({ character, onClick }: CharacterCardProps) {
   return (
-    <Link href={`/characters/${character.id}`} className="group">
+    <div onClick={onClick} className="group cursor-pointer">
       <Card className="overflow-hidden transition-all hover:shadow-lg hover:scale-[1.02]">
         <div className="relative aspect-square w-full overflow-hidden">
           <Image
@@ -29,11 +29,9 @@ export function CharacterCard({ character }: CharacterCardProps) {
           <dl>
             <dt>Status:</dt>
             <dd>{character.status}</dd>
-            <dt>Species:</dt>
-            <dd>{character.species}</dd>
           </dl>
         </CardContent>
       </Card>
-    </Link>
+    </div>
   );
 }

@@ -5,9 +5,13 @@ import { CharacterCard } from "./character-card";
 
 interface CharacterGridProps {
   characters: Character[];
+  onCharacterClick?: (characterId: string) => void;
 }
 
-export function CharacterGrid({ characters }: CharacterGridProps) {
+export function CharacterGrid({
+  characters,
+  onCharacterClick,
+}: CharacterGridProps) {
   if (characters.length === 0) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
@@ -19,7 +23,11 @@ export function CharacterGrid({ characters }: CharacterGridProps) {
   return (
     <div className="grid grid-cols-2 gap-6 lg:grid-cols-3 xl:grid-cols-4">
       {characters.map((character) => (
-        <CharacterCard key={character.id} character={character} />
+        <CharacterCard
+          key={character.id}
+          character={character}
+          onClick={() => onCharacterClick?.(character.id.toString())}
+        />
       ))}
     </div>
   );

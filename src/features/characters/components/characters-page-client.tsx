@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "@apollo/client/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GET_CHARACTERS } from "@/lib/graphql/queries/characters";
 import { CharactersResponse } from "@/lib/graphql/types/character";
 import { CharacterGrid } from "./character-grid";
 import { CharacterFilters } from "./character-filters";
+import { CharacterDetailModal } from "./character-detail-modal";
 
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import PaginationControls from "./pagination-controls";
@@ -28,6 +30,10 @@ export function CharactersPageClient({
 }: CharactersPageClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(
+    null
+  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const page = parseInt(searchParams.get("page") || "1", 10);
   const nameFilter = searchParams.get("name") || "";
@@ -69,6 +75,18 @@ export function CharactersPageClient({
     router.push(`/?${params.toString()}`);
   };
 
+  const handleCharacterClick = (characterId: string) => {
+    setSelectedCharacterId(characterId);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = (open: boolean) => {
+    setIsModalOpen(open);
+    if (!open) {
+      setSelectedCharacterId(null);
+    }
+  };
+
   if (error) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
@@ -105,7 +123,10 @@ export function CharactersPageClient({
         <LoadingSpinner label="Loading characters..." />
       ) : (
         <>
-          <CharacterGrid characters={characters} />
+          <CharacterGrid
+            characters={characters}
+            onCharacterClick={handleCharacterClick}
+          />
 
           {info && info.pages > 1 && (
             <PaginationControls
@@ -118,6 +139,12 @@ export function CharactersPageClient({
           )}
         </>
       )}
+
+      <CharacterDetailModal
+        characterId={selectedCharacterId}
+        open={isModalOpen}
+        onOpenChange={handleModalClose}
+      />
     </div>
   );
 }
