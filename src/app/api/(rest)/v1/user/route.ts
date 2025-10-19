@@ -10,7 +10,10 @@ export async function GET() {
   const userProfileCookie = cookieStore.get("user-profile")?.value;
 
   if (!userProfileCookie) {
-    return NextResponse.json({ error: "User profile not found" }, { status: 404 });
+    return NextResponse.json(
+      { error: "User profile not found" },
+      { status: 404 }
+    );
   }
 
   try {
