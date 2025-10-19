@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { ProfileSchema } from "@/features/profile/schemas";
 
 /**
  * GET /api/v1/user - Get user profile from cookie
@@ -36,6 +37,9 @@ export async function POST(request: Request) {
   try {
     const { username, jobTitle } = await request.json();
 
+    // Validate with Zod schema
+    const validatedData = ProfileSchema.parse({ username, jobTitle });
+
     if (!username || !jobTitle) {
       return NextResponse.json(
         { error: "Username and job title are required" },
@@ -43,7 +47,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const userProfile = { username, jobTitle };
+    const userProfile = {
+      username: validatedData.username,
+      jobTitle: validatedData.jobTitle,
+    };
     const cookieStore = await cookies();
 
     cookieStore.set("user-profile", JSON.stringify(userProfile), {
