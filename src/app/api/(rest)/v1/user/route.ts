@@ -26,6 +26,8 @@ export async function GET() {
 
     return NextResponse.json(validatedData);
   } catch {
+    // If invalid, clear the cookie
+    cookieStore.delete("user-profile");
     return NextResponse.json(
       { error: "Failed to parse user profile" },
       { status: 500 }
