@@ -19,7 +19,12 @@ export async function GET() {
 
   try {
     const userProfile = JSON.parse(userProfileCookie);
-    return NextResponse.json(userProfile);
+    const { username, jobTitle } = userProfile;
+
+    // Validate with Zod schema
+    const validatedData = ProfileSchema.parse({ username, jobTitle });
+
+    return NextResponse.json(validatedData);
   } catch {
     return NextResponse.json(
       { error: "Failed to parse user profile" },
