@@ -45,9 +45,9 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Match all request paths except for static content
+// Match all request paths except for static content and API routes
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
