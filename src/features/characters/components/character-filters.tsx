@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef, useEffect } from "react";
 
 interface CharacterFiltersProps {
   onFilterChange: (name: string) => void;
@@ -22,16 +22,40 @@ export function CharacterFilters({
 }: CharacterFiltersProps) {
   const [searchValue, setSearchValue] = useState(defaultValue);
   const [isPending, startTransition] = useTransition();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const debouncedFilterChange = (value: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      startTransition(() => {
+        onFilterChange(value);
+      });
+    }, 500);
+  };
+
+  const cancelDebouncedCalls = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      cancelDebouncedCalls();
+    };
+  }, []);
 
   const handleSearch = (value: string) => {
     setSearchValue(value);
-    startTransition(() => {
-      onFilterChange(value);
-    });
+    debouncedFilterChange(value);
   };
 
   const handleQuickFilter = (name: string) => {
     setSearchValue(name);
+    cancelDebouncedCalls();
     startTransition(() => {
       onFilterChange(name);
     });
@@ -39,6 +63,7 @@ export function CharacterFilters({
 
   const handleClearFilters = () => {
     setSearchValue("");
+    cancelDebouncedCalls();
     startTransition(() => {
       onFilterChange("");
     });
