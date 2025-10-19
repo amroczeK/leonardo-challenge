@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import MainContainer from "@/components/layout/main-container";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
+import { UserProfileProvider } from "@/features/profile/context/profile-context";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -26,9 +27,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
-            <MainContainer>{children}</MainContainer>
-            <Footer />
+            <UserProfileProvider>
+              <Header />
+              <MainContainer>{children}</MainContainer>
+              <Footer />
+            </UserProfileProvider>
           </ThemeProvider>
         </body>
       </html>
