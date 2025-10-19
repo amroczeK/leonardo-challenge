@@ -12,17 +12,17 @@ const publicRoutes = ["/profile"];
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Check if user has a profile via check for user-info cookie
-  const userInfoCookie = request.cookies.get("user-info")?.value;
+  // Check if user has a profile via check for user-profile cookie
+  const userProfileCookie = request.cookies.get("user-profile")?.value;
 
-  let hasUserInfo = false;
-  if (userInfoCookie) {
+  let hasUserProfile = false;
+  if (userProfileCookie) {
     try {
-      const userInfo = JSON.parse(userInfoCookie);
-      hasUserInfo = !!(userInfo.username && userInfo.jobTitle);
+      const userInfo = JSON.parse(userProfileCookie);
+      hasUserProfile = !!(userInfo.username && userInfo.jobTitle);
     } catch {
-      // Invalid JSON, e.g. no user info
-      hasUserInfo = false;
+      // Invalid JSON, e.g. no user profile
+      hasUserProfile = false;
     }
   }
 
@@ -31,13 +31,13 @@ export function middleware(request: NextRequest) {
   );
 
   // If user does not have a profile and trying to access protected route, redirect to profile page
-  if (!hasUserInfo && !isPublicRoute) {
+  if (!hasUserProfile && !isPublicRoute) {
     const profileUrl = new URL("/profile", request.url);
     return NextResponse.redirect(profileUrl);
   }
 
   // If user has profile and trying to access public pages, redirect to home page
-  if (hasUserInfo && isPublicRoute) {
+  if (hasUserProfile && isPublicRoute) {
     const homeUrl = new URL("/", request.url);
     return NextResponse.redirect(homeUrl);
   }
