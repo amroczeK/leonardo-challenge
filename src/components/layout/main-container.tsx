@@ -5,7 +5,7 @@ type MainContainerProps = {
 };
 
 function MainContainer({ children }: MainContainerProps) {
-  return <main className="container-layout">{children}</main>;
+  return <main className="container-layout flex-1">{children}</main>;
 }
 
 export default MainContainer;
