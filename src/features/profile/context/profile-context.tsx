@@ -18,6 +18,7 @@ interface UserProfileContextType {
   userProfile: UserProfile | null;
   isLoading: boolean;
   createUserProfile: (username: string, jobTitle: string) => Promise<void>;
+  updateUserProfile: (username: string, jobTitle: string) => Promise<void>;
   clearUserProfile: () => Promise<void>;
 }
 
@@ -71,6 +72,24 @@ export function UserProfileProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const updateUserProfile = async (username: string, jobTitle: string) => {
+    try {
+      const response = await fetch("/api/v1/user", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, jobTitle }),
+      });
+
+      if (response.ok) {
+        setUserProfile({ username, jobTitle });
+        router.refresh();
+      }
+    } catch (error) {
+      // TODO: Add state to display error message to user, and use centralised logging service
+      console.error("Failed to update user profile:", error);
+    }
+  };
+
   const clearUserProfile = async () => {
     try {
       await fetch("/api/v1/user", { method: "DELETE" });
@@ -85,7 +104,13 @@ export function UserProfileProvider({ children }: { children: ReactNode }) {
 
   return (
     <UserProfileContext.Provider
-      value={{ userProfile, isLoading, createUserProfile, clearUserProfile }}
+      value={{
+        userProfile,
+        isLoading,
+        createUserProfile,
+        updateUserProfile,
+        clearUserProfile,
+      }}
     >
       {children}
     </UserProfileContext.Provider>
