@@ -9,7 +9,9 @@ export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {
-      fetchPolicy: "cache-and-network",
+      // Use cache-first to avoid unnecessary network requests on navigation
+      // This will use cached data when available, only fetching when cache misses
+      fetchPolicy: "cache-first",
     },
   },
 });

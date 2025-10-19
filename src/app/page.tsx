@@ -1,29 +1,25 @@
+import { Suspense } from "react";
 import { CharactersPageClient } from "@/features/characters/components/characters-page-client";
 import { fetchCharactersForSSR } from "@/lib/graphql/queries/server-fetch";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 /**
- * Home page with SSR optimization to fetch chars
- * - Fetches pages 1-2 on the server for fast initial load
- * - Client component handles pagination and fetching for pages 3+
- * - Using searchParams to respect the URL state e.g. /?page=2&name=Rick
+ * Home page with static generation and SSR optimization
+ * - Always pre-fetches page 1 at build time (static)
+ * - Wrapped in Suspense to allow static generation with useSearchParams
  */
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string; name?: string }>;
-}) {
-  const params = await searchParams;
-  const page = parseInt(params.page || "1", 10);
-  const nameFilter = params.name || "";
-  const pageLimit = 2;
-
-  const initialData = await fetchCharactersForSSR(page, nameFilter, pageLimit);
+export default async function HomePage() {
+  // Always fetch page 1 data at build time for instant initial load
+  // NOTE: CharactersPageClient will handle dynamic page/filter changes
+  const initialData = await fetchCharactersForSSR(1, "", 2);
 
   return (
-    <CharactersPageClient
-      initialData={initialData}
-      initialPage={page}
-      initialNameFilter={nameFilter}
-    />
+    <Suspense fallback={<LoadingSpinner label="Loading characters..." />}>
+      <CharactersPageClient
+        initialData={initialData}
+        initialPage={1}
+        initialNameFilter=""
+      />
+    </Suspense>
   );
 }
