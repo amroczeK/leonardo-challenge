@@ -4,9 +4,12 @@ import React from "react";
 export default function NavigationBar() {
   return (
     <nav>
-      <ul>
+      <ul className="flex gap-4">
         <li>
           <Link href="/">Home</Link>
+        </li>
+        <li>
+          <Link href="/signup">Signup</Link>
         </li>
       </ul>
     </nav>
