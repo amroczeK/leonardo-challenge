@@ -16,10 +16,27 @@ import { useState } from "react";
 import { ZodError } from "zod";
 import FieldError from "@/components/ui/field-error";
 
-export function ProfileForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const { createUserProfile } = useUserProfile();
+interface ProfileFormProps {
+  mode?: "create" | "edit";
+  defaultValues?: {
+    username?: string;
+    jobTitle?: string;
+  };
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}
+
+export function ProfileForm({
+  mode = "create",
+  defaultValues,
+  onSuccess,
+  onCancel,
+}: ProfileFormProps) {
+  const { createUserProfile, updateUserProfile } = useUserProfile();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const isEditMode = mode === "edit";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,8 +54,15 @@ export function ProfileForm({ ...props }: React.ComponentProps<typeof Card>) {
       // Validate with Zod schema
       const validatedData = ProfileSchema.parse(data);
 
-      // Submit to API
-      await createUserProfile(validatedData.username, validatedData.jobTitle);
+      // Submit to API based on mode
+      if (isEditMode) {
+        await updateUserProfile(validatedData.username, validatedData.jobTitle);
+      } else {
+        await createUserProfile(validatedData.username, validatedData.jobTitle);
+      }
+
+      // Call onSuccess callback if provided
+      onSuccess?.();
     } catch (error) {
       if (error instanceof ZodError) {
         // Handle Zod validation errors
@@ -57,11 +81,15 @@ export function ProfileForm({ ...props }: React.ComponentProps<typeof Card>) {
   };
 
   return (
-    <Card {...props}>
+    <Card>
       <CardHeader>
-        <CardTitle>Create your profile</CardTitle>
+        <CardTitle>
+          {isEditMode ? "Edit Profile" : "Create your profile"}
+        </CardTitle>
         <CardDescription>
-          Enter your information below to complete your profile
+          {isEditMode
+            ? "Update your profile information below"
+            : "Enter your information below to complete your profile"}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -74,6 +102,7 @@ export function ProfileForm({ ...props }: React.ComponentProps<typeof Card>) {
                 name="jobTitle"
                 type="text"
                 placeholder="Software Engineer"
+                defaultValue={defaultValues?.jobTitle}
                 required
                 aria-invalid={!!errors.jobTitle}
                 aria-describedby={
@@ -93,6 +122,7 @@ export function ProfileForm({ ...props }: React.ComponentProps<typeof Card>) {
                 name="username"
                 type="text"
                 placeholder="john_doe"
+                defaultValue={defaultValues?.username}
                 required
                 aria-invalid={!!errors.username}
                 aria-describedby={
@@ -111,11 +141,27 @@ export function ProfileForm({ ...props }: React.ComponentProps<typeof Card>) {
               errorMessage={errors.form}
             />
             <FieldGroup>
-              <Field>
+              <div className="flex gap-2">
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Creating..." : "Complete Profile"}
+                  {isSubmitting
+                    ? isEditMode
+                      ? "Saving..."
+                      : "Creating..."
+                    : isEditMode
+                    ? "Save Changes"
+                    : "Complete Profile"}
                 </Button>
-              </Field>
+                {isEditMode && onCancel && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={onCancel}
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </Button>
+                )}
+              </div>
             </FieldGroup>
           </FieldGroup>
         </form>
