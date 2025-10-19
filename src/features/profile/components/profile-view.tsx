@@ -13,6 +13,7 @@ import { useUserProfile } from "../context/profile-context";
 import { useState } from "react";
 import { ProfileForm } from "./profile-form";
 import ProfileFieldInfo from "./profile-field-info";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 export function ProfileView() {
   const { userProfile, isLoading } = useUserProfile();
@@ -29,15 +30,7 @@ export function ProfileView() {
   if (isLoading) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle>Profile</CardTitle>
-          <CardDescription>Loading your profile information...</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-center py-8">
-            <p className="text-sm text-muted-foreground">Loading...</p>
-          </div>
-        </CardContent>
+        <LoadingSpinner label="Loading your profile information..." />
       </Card>
     );
   }
