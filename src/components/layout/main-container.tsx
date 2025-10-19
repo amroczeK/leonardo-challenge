@@ -5,7 +5,7 @@ type MainContainerProps = {
 };
 
 function MainContainer({ children }: MainContainerProps) {
-  return <main className="container mx-auto max-w-7xl">{children}</main>;
+  return <main className="container-layout">{children}</main>;
 }
 
 export default MainContainer;

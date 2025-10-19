@@ -121,3 +121,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .container-layout {
+    @apply container mx-auto max-w-7xl px-4;
+  }
+}

@@ -3,7 +3,7 @@ import NavigationBar from "./navigation-bar";
 
 function Header() {
   return (
-    <header>
+    <header className="container-layout py-4">
       <NavigationBar />
     </header>
   );
