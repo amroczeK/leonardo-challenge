@@ -1,10 +1,10 @@
-import { LoginForm } from "@/features/authentication/login-form";
+import { ProfileForm } from "@/features/profile/profile-form";
 
-export default function LoginPage() {
+export default function ProfilePage() {
   return (
     <div className="flex h-full items-center justify-center py-6">
       <div className="w-full max-w-sm">
-        <LoginForm />
+        <ProfileForm />
       </div>
     </div>
   );
