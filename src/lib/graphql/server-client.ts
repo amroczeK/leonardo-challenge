@@ -18,8 +18,8 @@ export const { getClient, query, PreloadQuery } = registerApolloClient(() => {
       // Absolute URL is required for SSR
       uri: "https://rickandmortyapi.com/graphql",
       fetchOptions: {
-        // Disable caching for SSR to always get fresh data
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 300 }, // Revalidate every 5 minutes
       },
     }),
   });
