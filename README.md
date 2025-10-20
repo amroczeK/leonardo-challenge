@@ -11,6 +11,12 @@ Website is accessible via https://leonardo-challenge-two.vercel.app/.
 6. When you click on a card, it will open a modal with additional information about the character.
 7. You can also access character details via dynamic route e.g. https://leonardo-challenge-two.vercel.app/characters/1. This dynamic route is not using SSR yet.
 
+TODOS:
+1. Configure RTL & Jest and add tests
+2. Add testing stage to CI/CD pipeline
+3. Optimise performance, reduce querying latency, improve caching
+4. Improve accessibility
+
 ![preview](./public/preview.png)
 
 ## Getting Started
